@@ -81,23 +81,25 @@ class LandingPage extends StatelessWidget {
           children: [
             _buildHeroSection(context),
             const SizedBox(height: 80),
-            _buildGridSection( context, 'Our Services', services),
+            _buildGridSection(context, 'Our Services', services),
             const SizedBox(height: 80),
-            _buildOfferCarddsSection(),// Updated Offer Cards 
+            _buildOfferCarddsSection(),
             const SizedBox(height: 80),
             _buildYoutubeSection(),
-            const SizedBox(height: 100),
+            const SizedBox(height: 80),
+            const TeamSection(), // Added Team Section here
+            const SizedBox(height: 80),
             _buildReviewSection(),
             const SizedBox(height: 80),
-            _buildMoreOffersSection(), // Updated More Offers Section with Carousel
+            _buildMoreOffersSection(),
             const SizedBox(height: 80),
             _buildFooterSection(),
-
           ],
         ),
       ),
     );
   }
+
 
   Widget _buildHeroSection(BuildContext context) {
     return Padding(
@@ -438,6 +440,12 @@ Widget _buildYoutubeSection() {
     },
   );
 }
+
+
+
+
+
+
   Widget _buildFooterSection() {
     return Stack(
       children: [
@@ -827,6 +835,221 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
   }
 }
 
+
+class TeamSection extends StatelessWidget {
+  const TeamSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFB6F492),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'Team',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 32,
+                color: const Color(0xFFB6F492),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Meet the skilled and experienced team behind our successful digital marketing strategies',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    height: 1.5,
+                  ),
+                  softWrap: true,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              int crossAxisCount = screenWidth > 900 ? 3 : screenWidth > 600 ? 2 : 1;
+              return GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                childAspectRatio: 1.2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: _buildTeamCards(),
+              );
+            },
+          ),
+          const SizedBox(height: 32),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1A1C1E),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'See all team',
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildTeamCards() {
+    final teamMembers = [
+      {
+        'name': 'John Smith',
+        'role': 'CEO and Founder',
+        'experience': '10+ years of experience in digital marketing. Expertise in SEO, PPC, and content strategy',
+      },
+      {
+        'name': 'Jane Doe',
+        'role': 'Director of Operations',
+        'experience': '7+ years of experience in project management and team leadership. Strong organizational and communication skills',
+      },
+      {
+        'name': 'Michael Brown',
+        'role': 'Senior SEO Specialist',
+        'experience': '5+ years of experience in SEO and content creation. Proficient in keyword research and on-page optimization',
+      },
+      {
+        'name': 'Emily Johnson',
+        'role': 'PPC Manager',
+        'experience': '3+ years of experience in paid search advertising. Skilled in campaign management and performance analysis',
+      },
+      {
+        'name': 'Brian Williams',
+        'role': 'Social Media Specialist',
+        'experience': '4+ years of experience in social media marketing. Proficient in creating and scheduling content, analyzing metrics, and building engagement',
+      },
+      {
+        'name': 'Sarah Kim',
+        'role': 'Content Creator',
+        'experience': '2+ years of experience in writing and editing. Skilled in creating compelling, SEO-optimized content for various industries',
+      },
+    ];
+
+    return teamMembers.map((member) => _buildTeamCard(member)).toList();
+  }
+
+  Widget _buildTeamCard(Map<String, String> member) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.black12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFB6F492),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: const Icon(
+                  Icons.link,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            member['name']!,
+            style: GoogleFonts.inter(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            member['role']!,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: Text(
+              member['experience']!,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: Colors.black54,
+                height: 1.5,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 
 
