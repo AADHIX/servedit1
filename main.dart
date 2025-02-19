@@ -82,7 +82,7 @@ class LandingPage extends StatelessWidget {
           children: [
             _buildHeroSection(context),
             const SizedBox(height: 80),
-            _buildGridSection(context, 'Our Services', services),
+            _buildGridSection(context, 'Services', services),
             const SizedBox(height: 80),
             _buildOfferCarddsSection(),
             const SizedBox(height: 80),
@@ -208,7 +208,12 @@ Widget _buildHeroImage(BuildContext context) {
 }
 
   
-Widget _buildGridSection(BuildContext context, String title, List<Map<String, dynamic>> items) {
+// Update the grid section building methods
+
+
+
+
+Widget _buildGridSection(BuildContext context, String title, List<ServiceItem> items) {
   return LayoutBuilder(
     builder: (context, constraints) {
       final isSmallScreen = constraints.maxWidth < 600;
@@ -262,7 +267,7 @@ final List<Color> cardColors = [
   const Color.fromARGB(255, 116, 116, 4),  // Light yellow
 ];
 
-Widget _buildResponsiveInfoCard(Map<String, dynamic> item, int index) {
+Widget _buildResponsiveInfoCard(ServiceItem item, int index) {
   return LayoutBuilder(
     builder: (context, constraints) {
       return Container(
@@ -275,7 +280,6 @@ Widget _buildResponsiveInfoCard(Map<String, dynamic> item, int index) {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          // Apply background color based on index
           color: cardColors[index % cardColors.length],
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -283,16 +287,14 @@ Widget _buildResponsiveInfoCard(Map<String, dynamic> item, int index) {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Replace Icon with SvgPicture
-                Image.asset(
-                  item['svgPath'], // New key for SVG path
-                  height: 24,
-                  width: 24,
-                  color: Colors.black87, // Maintain consistent color with theme
+                Icon(
+                  item.icon,
+                  size: 24,
+                  color: Colors.black87,
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  item['title'],
+                  item.title,
                   style: GoogleFonts.viga(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -301,7 +303,7 @@ Widget _buildResponsiveInfoCard(Map<String, dynamic> item, int index) {
                 const SizedBox(height: 8),
                 Expanded(
                   child: Text(
-                    item['description'],
+                    item.description,
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       color: Colors.black54,
@@ -355,6 +357,10 @@ Widget _buildSectionDescription() {
     ),
   );
 }
+
+
+
+
 
 
 //.............///
@@ -1087,47 +1093,57 @@ class TeamSection extends StatelessWidget {
   }
 }
 
+class ServiceItem {
+  final String title;
+  final String description;
+  final String imagePath;
+  final IconData icon;
 
+  ServiceItem({
+    required this.title,
+    required this.description,
+    required this.imagePath,
+    required this.icon,
+  });
+}
 
-List<Map<String, dynamic>> services = [
-  {
-    'title': 'Real-time Parking Info',
-    'icon': Icons.directions_car,
-    'description': 'Get real-time updates on parking availability.',
-    'imagePath': 'assets/cards/Cardgrey.png'
-  },
-  {
-    'title': 'Pre-Booking',
-    'icon': Icons.book_online,
-    'description': 'Reserve a parking spot in advance.',
-    'imagePath': 'assets/cards/Cardgreen.png'
-  },
-  {
-    'title': 'Automatic Entry & Exit',
-    'icon': Icons.sensor_door,
-    'description': 'Seamless parking access with automated barriers.',
-    'imagePath': 'assets/cards/Cardblue.png'
-  },
-  {
-    'title': 'Automatic ',
-    'icon': Icons.sensor_door,
-    'description': 'Seamless parking access with automated barriers.',
-    'imagePath': 'assets/cards/Cardgreen.png'
-  },
-  {
-    'title': 'Auto ',
-    'icon': Icons.sensor_door,
-    'description': 'Seamless parking access with automated barriers.',
-    'imagePath': 'assets/cards/Cardgrey.png'
-  },
-  {
-    'title': 'Auto ',
-    'icon': Icons.sensor_door,
-    'description': 'Seamless parking access with automated barriers.',
-    'imagePath': 'assets/cards/Cardgrey.png'
-  },
-
-
+final List<ServiceItem> services = [
+  ServiceItem(
+    title: 'Real-time Parking Info',
+    icon: Icons.directions_car,
+    description: 'Get real-time updates on parking availability.',
+    imagePath: 'assets/cards/Cardgrey.png'
+  ),
+  ServiceItem(
+    title: 'Pre-Booking',
+    icon: Icons.book_online,
+    description: 'Reserve a parking spot in advance.',
+    imagePath: 'assets/cards/Cardgreen.png'
+  ),
+  ServiceItem(
+    title: 'Automatic Entry & Exit',
+    icon: Icons.sensor_door,
+    description: 'Seamless parking access with automated barriers.',
+    imagePath: 'assets/cards/Cardblue.png'
+  ),
+  ServiceItem(
+    title: 'Automatic',
+    icon: Icons.sensor_door,
+    description: 'Seamless parking access with automated barriers.',
+    imagePath: 'assets/cards/Cardgreen.png'
+  ),
+  ServiceItem(
+    title: 'Auto',
+    icon: Icons.sensor_door,
+    description: 'Seamless parking access with automated barriers.',
+    imagePath: 'assets/cards/Cardgrey.png'
+  ),
+  ServiceItem(
+    title: 'Auto',
+    icon: Icons.sensor_door,
+    description: 'Seamless parking access with automated barriers.',
+    imagePath: 'assets/cards/Cardgrey.png'
+  ),
 ];
 
 
