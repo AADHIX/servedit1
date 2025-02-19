@@ -28,7 +28,7 @@ class MarketingApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: const LandingPage(),
+      home: LandingPage(), // Removed const
     );
   }
 }
@@ -49,7 +49,8 @@ class LanguageController extends ChangeNotifier {
 
 
 class LandingPage extends StatelessWidget {
-  const LandingPage({super.key});
+  // Remove const from constructor since child widgets aren't const
+  LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -87,11 +88,9 @@ class LandingPage extends StatelessWidget {
             const SizedBox(height: 80),
             _buildYoutubeSection(),
             const SizedBox(height: 80),
-            const TeamSection(), // Added Team Section here
+            TeamSection(), // Removed const since TeamSection isn't const
             const SizedBox(height: 80),
             _buildReviewSection(),
-            const SizedBox(height: 80),
-            _buildMoreOffersSection(),
             const SizedBox(height: 80),
             _buildFooterSection(),
           ],
@@ -102,244 +101,263 @@ class LandingPage extends StatelessWidget {
 
 
   Widget _buildHeroSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0),  // Added left margin
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Navigating the\n',
-                        style: GoogleFonts.openSans(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'digital landscape\n',
-                        style: GoogleFonts.openSans(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'for success',
-                        style: GoogleFonts.openSans(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(227, 144, 240, 70),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Our digital marketing agency helps businesses\ngrow and succeed online through a range of\nservices including SEO, PPC, social media marketing.',
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    height: 1.6,
-                    letterSpacing: 0.5,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Container(
-                width: 400,
-                height: 400,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/hero.png',
-                      width: 670,
-                      height: 670,
-                    ),
-                  ],
-                ),
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final isSmallScreen = constraints.maxWidth < 800;
+      return Padding(
+        padding: const EdgeInsets.only(left: 16.0),
+        child: Column(
+          children: [
+            if (isSmallScreen) ...[
+              _buildHeroContent(),
+              const SizedBox(height: 40),
+              _buildHeroImage(context),
+            ] else
+              Row(
+                children: [
+                  Expanded(child: _buildHeroContent()),
+                  Expanded(child: _buildHeroImage(context)),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
+    },
+  );
+}
 
-
-  
- Widget _buildGridSection(BuildContext context, String title, List<Map<String, dynamic>> items) {
-  // List of background colors for cards
-  final List<Color> cardColors = [
-    const Color(0xFFF0F8FF), // AliceBlue
-    const Color(0xFFE6E6FA), // Lavender
-    const Color(0xFFF0FFF0), // Honeydew
-    const Color(0xFFFFE4E1), // MistyRose
-    const Color(0xFFF5F5DC), // Beige
-    const Color(0xFFF0FFFF), // Azure
-  ];
-
-  // List of title background colors
-  final List<Color> titleBgColors = [
-    const Color(0xFF90CDF4), // Light Blue
-    const Color(0xFFB794F4), // Light Purple
-    const Color(0xFF9AE6B4), // Light Green
-    const Color(0xFFFBD38D), // Light Orange
-    const Color(0xFFF687B3), // Light Pink
-    const Color(0xFF81E6D9), // Light Teal
-  ];
-
-  if (items.isEmpty) {
-    return Center(
-      child: Text(
-        'No services available.',
-        style: GoogleFonts.inter(fontSize: 16, color: Colors.black54),
-      ),
-    );
-  }
-
+// Extract hero content to separate method
+Widget _buildHeroContent() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      RichText(
+        text: TextSpan(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(185, 225, 255, 202),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Text(
-                title,
-                style: GoogleFonts.inter(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+            TextSpan(
+              text: 'Navigating the\n',
+              style: GoogleFonts.openSans(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                'Our comprehensive services are designed to streamline your parking experience, offering real-time information, navigation assistance, and advanced features like pre-booking and automatic entry/exit.',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  height: 1.5,
-                ),
+            TextSpan(
+              text: 'digital landscape\n',
+              style: GoogleFonts.openSans(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            TextSpan(
+              text: 'for success',
+              style: GoogleFonts.openSans(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(227, 144, 240, 70),
               ),
             ),
           ],
         ),
       ),
       const SizedBox(height: 24),
-      LayoutBuilder(
-        builder: (context, constraints) {
-          return GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: items.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: constraints.maxWidth > 600 ? 2 : 1,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 20,
-              childAspectRatio: 2.3,
-            ),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              return _buildInfoCard(
-                item['title'] ?? 'No Title',
-                item['icon'] as IconData? ?? Icons.info,
-                item['description'] ?? 'No description available',
-                cardColors[index % cardColors.length],
-                titleBgColors[index % titleBgColors.length],
-              );
-            },
-          );
-        },
+      Text(
+        'Our AutoSpace helps\nto navigate seamlessly\nsecurely and efficiently.',
+        textAlign: TextAlign.justify,
+        style: GoogleFonts.viga(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          height: 1.6,
+          letterSpacing: 0.5,
+          color: Colors.black87,
+        ),
       ),
     ],
   );
 }
 
-Widget _buildInfoCard(String title, IconData icon, String description, Color cardColor, Color titleBgColor) {
-  return Container(
-    decoration: BoxDecoration(
-      color: cardColor,
-      borderRadius: BorderRadius.circular(30),
-      border: Border.all(color: Colors.grey.shade300),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 5,
-          offset: const Offset(0, 3),
-        ),
-        
-      ],
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 32, color: titleBgColor.withOpacity(0.8)),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              
-              color: titleBgColor.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+// Extract hero image to separate method
+Widget _buildHeroImage(BuildContext context) {
+  return Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 400,
+        maxHeight: 400,
+      ),
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.asset(
+                'assets/images/hero.png',
+                fit: BoxFit.contain,
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            description,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: Colors.black54,
-            ),
-          ),
-        ],
+        ),
       ),
     ),
   );
 }
 
+  
+Widget _buildGridSection(BuildContext context, String title, List<Map<String, dynamic>> items) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final isSmallScreen = constraints.maxWidth < 600;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSectionTitle(title),
+                const SizedBox(height: 16),
+                if (!isSmallScreen)
+                  _buildSectionDescription()
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildSectionDescription(),
+                  ),
+              ],
+            ),
+          ),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: items.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: constraints.maxWidth > 900 ? 3 : constraints.maxWidth > 600 ? 2 : 1,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              childAspectRatio: constraints.maxWidth > 900 ? 1.5 : 1.8,
+            ),
+            itemBuilder: (context, index) => _buildResponsiveInfoCard(items[index], index),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+// Add this helper method for responsive info cards
+
+final List<Color> cardColors = [
+  const Color.fromARGB(227, 142, 231, 46),  // Light blue
+  const Color.fromARGB(125, 63, 61, 61),  // Light pink
+  const Color.fromARGB(182, 21, 26, 56),  // Light green
+  const Color.fromARGB(214, 96, 95, 94),  // Light orange
+  const Color.fromARGB(219, 51, 51, 56),  // Light purple
+  const Color.fromARGB(255, 116, 116, 4),  // Light yellow
+];
+
+Widget _buildResponsiveInfoCard(Map<String, dynamic> item, int index) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return Container(
+        constraints: BoxConstraints(
+          maxWidth: constraints.maxWidth,
+          minHeight: 150,
+        ),
+        child: Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          // Apply background color based on index
+          color: cardColors[index % cardColors.length],
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Replace Icon with SvgPicture
+                Image.asset(
+                  item['svgPath'], // New key for SVG path
+                  height: 24,
+                  width: 24,
+                  color: Colors.black87, // Maintain consistent color with theme
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  item['title'],
+                  style: GoogleFonts.viga(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: Text(
+                    item['description'],
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+// Add this helper method for section titles
+Widget _buildSectionTitle(String title) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    decoration: BoxDecoration(
+      color: const Color.fromARGB(255, 102, 239, 72),
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.3),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Text(
+      title,
+      style: GoogleFonts.inter(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
+      ),
+    ),
+  );
+}
+
+// Add this helper method for section descriptions
+Widget _buildSectionDescription() {
+  return Text(
+    'Our comprehensive services are designed to streamline your parking experience, offering real-time information, navigation assistance, and advanced features like pre-booking and automatic entry/exit.',
+    style: GoogleFonts.inter(
+      fontSize: 16,
+      color: Colors.black87,
+      height: 1.5,
+    ),
+  );
+}
+
+
+//.............///
 
 Widget _buildYoutubeSection() {
   return Consumer<LanguageController>(
@@ -358,11 +376,11 @@ Widget _buildYoutubeSection() {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(185, 225, 255, 202),
+                  color: const Color.fromARGB(255, 102, 239, 72),
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
+                      color: const Color.fromARGB(255, 108, 105, 105).withOpacity(0.3),
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: const Offset(0, 3),
@@ -371,21 +389,22 @@ Widget _buildYoutubeSection() {
                 ),
                 child: Text(
                   youtubeTranslations[languageController.currentLanguage]!['channel_title']!,
-                  style: GoogleFonts.inter(fontSize: 36, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.justify,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   youtubeTranslations[languageController.currentLanguage]!['subscribe_text']!,
-                  style: GoogleFonts.inter(fontSize: 16, color: Colors.black87),
+                  style: GoogleFonts.inter(fontSize: 14, color: Colors.black87),
                 ),
               ),
               // Language Selector
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(185, 225, 255, 202),
+                  color: const Color.fromARGB(255, 102, 239, 72),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
@@ -396,12 +415,14 @@ Widget _buildYoutubeSection() {
                     items: [
                       DropdownMenuItem(
                         value: 'en',
-                        child: Text('English', 
+                        child: Text('English',
+                        textAlign: TextAlign.justify, 
                           style: GoogleFonts.inter(fontSize: 14, color: Colors.black87)),
                       ),
                       DropdownMenuItem(
                         value: 'ml',
-                        child: Text('മലയാളം', 
+                        child: Text('മലയാളം',
+                        textAlign: TextAlign.justify, 
                           style: GoogleFonts.inter(fontSize: 14, color: Colors.black87)),
                       ),
                     ],
@@ -457,11 +478,11 @@ Widget _buildYoutubeSection() {
         ),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-          color: const Color.fromARGB(185, 225, 255, 202).withOpacity(0.9), // Adjust opacity to blend with background
+          color: const Color.fromARGB(255, 102, 239, 72).withOpacity(0.9), // Adjust opacity to blend with background
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(185, 225, 255, 202),
                   borderRadius: BorderRadius.circular(8),
@@ -496,120 +517,182 @@ Widget _buildYoutubeSection() {
   }
 
   Widget _buildReviewSection() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Row to place "Reviews" and its description side by side
-      Row(
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final isMobile = constraints.maxWidth < 600;
+      
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Container for "Reviews" text
+          // Header Section with Responsive Layout
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(185, 225, 255, 202),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Text(
-              'Reviews',
-              style: GoogleFonts.inter(fontSize: 36, fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(width: 16), // Add spacing between "Reviews" and description
-          // Expanded widget to allow the description to take remaining space
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12), // Adjust vertical alignment
-              child: Text(
-                'Read what our customers have to say about their experiences with AutoSpace.',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  height: 1.5,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 20), // Add spacing below the row
-      // Horizontal list of reviews
-      SizedBox(
-        height: 220,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: reviews.length,
-          itemBuilder: (context, index) {
-            final review = reviews[index];
-            return Container(
-              width: 320,
-              margin: const EdgeInsets.only(right: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(185, 225, 255, 202),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade300),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(185, 225, 255, 202).withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: DottedBorder(
-                color: Colors.green,
-                strokeWidth: 2,
-                borderType: BorderType.RRect,
-                radius: const Radius.circular(16),
-                dashPattern: const [6, 3],
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.green.shade100,
-                            child: Text(
-                              review['name']![0],
-                              style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold)),
-                            ),
-                          const SizedBox(width: 12),
-                          Text(
-                            review['name'] ?? 'No Name',
-                            style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        review['feedback'] ?? 'No Feedback',
-                        style: GoogleFonts.inter(fontSize: 14, color: Colors.black87)),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: List.generate(5, (index) {
-                          return Icon(Icons.star, color: Colors.yellow.shade700, size: 20);
-                        }),
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth),
+            child: Row(  // Changed Wrap to Row for better control
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 102, 239, 72),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
+                  child: Text(
+                    'Reviews',
+                    style: GoogleFonts.viga(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      backgroundColor: const Color.fromARGB(255, 102, 239, 72),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(  // Changed Flexible to Expanded
+                  child: Text(
+                    'Read what our customers have to say about their experiences with AutoSpace.',
+                    textAlign: TextAlign.justify,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: Colors.black87,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          
+          // Reviews Carousel with Flow Protection
+          SizedBox(
+            height: 220,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: reviews.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    right: 16,
+                    left: index == 0 ? (isMobile ? 0 : 16) : 0,
+                  ),
+                  child: _buildReviewCard(reviews[index], constraints),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Widget _buildReviewCard(Map<String, String> review, BoxConstraints constraints) {
+  final cardWidth = constraints.maxWidth < 600 ? 
+                    constraints.maxWidth * 0.85 : 
+                    constraints.maxWidth < 900 ? 300.0 : 320.0;
+                    
+  return ConstrainedBox(
+    constraints: BoxConstraints(
+      maxWidth: cardWidth,
+      minWidth: 280,
+    ),
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(185, 225, 255, 202),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(184, 20, 22, 18).withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: DottedBorder(
+        color: const Color.fromARGB(214, 143, 231, 71),
+        strokeWidth: 2,
+        borderType: BorderType.RRect,
+        radius: const Radius.circular(30),
+        dashPattern: const [6, 3],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Avatar and Name Row
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.green.shade100,
+                    child: Text(
+                      review['name']?[0] ?? '',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      review['name'] ?? 'No Name',
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              
+              // Feedback Text
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Text(
+                    review['feedback'] ?? 'No Feedback',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: Colors.black87,
+                      height: 1.5,
+                    ),
+                  ),
                 ),
               ),
-            );
-          },
+              
+              // Rating Stars
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: List.generate(
+                    5,
+                    (index) => const Padding(
+                      padding: EdgeInsets.only(left: 2),
+                      child: Icon(
+                        Icons.star,
+                        color: Color.fromARGB(255, 133, 83, 240),
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ],
+    ),
   );
 }
 
@@ -638,79 +721,98 @@ Widget _buildYoutubeSection() {
         'image': 'assets/cards/offer4.png',
       },
     ];
-
+                 
     return Column(
-      children: [
-        const Text(
-          'UPCOMING OFFERS',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+    children: [
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(214, 143, 231, 71),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: RichText(
+          textAlign: TextAlign.justify,
+          text: const TextSpan(
+            text: 'UPCOMING OFFERS',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+
+            ),
           ),
         ),
-        const SizedBox(height: 20),
-        CarouselSlider.builder(
-          itemCount: offers.length,
-          itemBuilder: (context, index, realIndex) {
-            final offer = offers[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              elevation: 5,
-              child: Stack(
-                children: [
-                  Container(
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.0),
-                      image: DecorationImage(
-                        image: AssetImage(offer['image']!),
-                        fit: BoxFit.cover,
-                      ),
+      ),
+      const SizedBox(height: 20),
+      CarouselSlider.builder(
+        itemCount: offers.length,
+        itemBuilder: (context, index, realIndex) {
+          final offer = offers[index];
+          return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            elevation: 5,
+            child: Stack(
+              children: [
+                Container(
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.0),
+                    image: DecorationImage(
+                      image: AssetImage(offer['image']!),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.0),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.black.withOpacity(0.3), Colors.black.withOpacity(0.7)],
-                      ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.0),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.black.withOpacity(0.3), Colors.black.withOpacity(0.7)],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          offer['title']!,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        offer['title']!,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        const SizedBox(height: 5),
-                        Text(
-                          offer['description']!,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        offer['description']!,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
+                ),
+              ],
+            ),
+          );
+        },
           options: CarouselOptions(
             autoPlay: true,
             enlargeCenterPage: true,
@@ -729,76 +831,7 @@ Widget _buildYoutubeSection() {
 
 
   // Updated More Offers Section with Carousel Slider
-  Widget _buildMoreOffersSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(185, 225, 255, 202),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Text(
-            'More Offers',
-            style: GoogleFonts.inter(fontSize: 36, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 24),
-        CarouselSlider.builder(
-          itemCount: moreOffers.length,
-          options: CarouselOptions(
-            autoPlay: true, // Enable auto-play
-            enlargeCenterPage: true, // Enlarge the center page
-            aspectRatio: 3.3, // Aspect ratio of the carousel
-            viewportFraction: 3.3, // Fraction of the viewport to show
-          ),
-          itemBuilder: (context, index, realIndex) {
-            final offer = moreOffers[index];
-            return Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(offer['icon'], size: 32, color: Colors.green),
-                    const SizedBox(height: 12),
-                    Text(
-                      offer['title'],
-                      style: GoogleFonts.inter(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      offer['description'],
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
+  
 
 
 class YoutubePlayerWidget extends StatefulWidget {
@@ -858,6 +891,7 @@ class TeamSection extends StatelessWidget {
                 ),
                 child: Text(
                   'Team',
+                  textAlign: TextAlign.justify,
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -879,6 +913,7 @@ class TeamSection extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Meet the skilled and experienced team behind our successful digital marketing strategies',
+                  textAlign: TextAlign.justify,
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     color: Colors.black87,
@@ -917,6 +952,7 @@ class TeamSection extends StatelessWidget {
               ),
               child: Text(
                 'See all team',
+                textAlign: TextAlign.justify,
                 style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 16,
